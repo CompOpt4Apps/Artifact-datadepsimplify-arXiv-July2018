@@ -34,7 +34,6 @@ using jsoncons::json;
 using namespace iegenlib;
 using namespace std;
 
-
 // The data structure that holds evaluation result for a dependence relation
 typedef struct deprel{
 
@@ -56,11 +55,6 @@ typedef struct deprel{
 }depRel;
 
 
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//! If you wish not to see the output, change the value: verbose = false;
-bool verbose=true;
-
 void driver(string list);
 
 // Utility functions
@@ -72,16 +66,10 @@ string adMissingInductionConstraints(string str,json &missingConstraints);
 void setDependencesVal(std::vector<depRel> &dependences, int relNo, int rule, bool val);
 string getPrettyComplexity(string comp);
 int compCompare(string comp1, string comp2);
-bool printRelation(string msg, Relation *rel);
-void EXPECT_EQ(string a, string b);
-void EXPECT_EQ(Relation *a, Relation *b);
-int str2int(string str);
 string int2str(int i);
 string trimO(string str);
 string b2s(bool cond){ if(cond){ return string("Yes");} return string("No");} 
-// Generate CHILL scripts using analysis info from json file 
 void genChillScript(json &analysisInfo);
-
 
 
 
@@ -103,11 +91,9 @@ int main(int argc, char **argv)
 }
 
 
-
 // The driver that gathers the results for arXiv submission
 void driver(string list)
 {
-
   map<string,int> currentCodeOrigComplexities, origComplexities, blComplexities,
                   monoComplexities, coMonoComplexities, triComplexities, comboComplexities;
   initComplexities(origComplexities); initComplexities(blComplexities);
@@ -123,11 +109,8 @@ void driver(string list)
   ofstream outTab4("results/partialTable4.csv", std::ofstream::out);
   outTab4<<"Kernel name , Inspector complexity , Simplified inspector , Kernel complexity";
 
-
   // Read name of json files from input list
   ifstream inL(list);
-
-
 
  // Looping over examples listed in the input file (JSON files)
  for(; getline( inL, inputFileName );){ 
@@ -189,8 +172,8 @@ void driver(string list)
       continue;
     }
 
-    // (4) Specify loops that are going to be parallelized, 
-    //     so we are not going to project them out.
+    // Specify loops that are going to be parallelized, 
+    // so we are not going to project them out.
     json npJ = data[0][0]["Do Not Project Out"];
     parallelTvs.clear();
     notProjectIters( rel, parallelTvs, npJ);
@@ -213,7 +196,6 @@ void driver(string list)
     i++;
   }
   nUniqueRels = i;
-
 
   int nBL=0;
   for( i=0; i < nUniqueRels; i++){    //Loop over all unique relations
@@ -249,8 +231,7 @@ void driver(string list)
           simpComplexity = result->complexityForPartialParallel(parallelTvs);
           dependences[i].simpComplexity = simpComplexity;
           dependences[i].simpRel = result;
-          maySatFound++;    
-//          cout<<"\n  Complexity#"<<i<<" = "<<complexity<<"\n";
+          maySatFound++;
         }
       }
     
@@ -259,7 +240,6 @@ void driver(string list)
       delete useRule;
     }
   }
-
 
   // Generate analysis result for a code.
   ofstream outRes((data[0][0]["Result"].as<string>()).c_str(), std::ofstream::out);
@@ -305,15 +285,6 @@ void driver(string list)
         if(compCompare(dependences[i].simpComplexity, kernelComplexity) < 1)withEqLess++;
       }
     }
-
-
-//    if(!(dependences[i].combo)){
-//      if(compCompare(dependences[i].origComplexity, kernelComplexity) < 1){cout<<"\norg++\n"; origCompLess++;}
- //     if(compCompare(dependences[i].simpComplexity, kernelComplexity) < 1){cout<<"\norg++\n"; withEqLess++;}
- //   }
-    // Gathering data for partial Table 3
-    //origInspComp += 
-
   }
   // Generate data for partial Table 3
   outTab3<<"\n"<<data[0][0]["Name"].as<string>()<<" , "<<origCompLess<<" , "<<maySatFound<<" , "<<withEqLess<<" , "<<maySatFound<<" , NaN , NaN";
@@ -353,14 +324,9 @@ void driver(string list)
   int gnErr = system ("gnuplot data/gnpFig9.gnu");
   gnErr = system ("evince results/figure9.pdf");
 }
+// ----------- End of driver function --------------------------------------
 
-
-
-
-
-
-
-
+// Generate CHILL scripts using analysis info from json file 
 void genChillScript(json &analysisInfo){
 
   ofstream outf;
@@ -377,9 +343,7 @@ void genChillScript(json &analysisInfo){
                           <<"\')\n";
 }
 
-
 string adMissingInductionConstraints(string str,json &missingConstraints){
-
   bool notChanged=true;
   int inArrity = 5, outArity = 5;
   string newStr, inTupleVars[20], outTupleVars[20];
@@ -425,9 +389,6 @@ string adMissingInductionConstraints(string str,json &missingConstraints){
   return newStr;
 }
 
-
-
-
 void setDependencesVal(std::vector<depRel> &dependences, int relNo, int rule, bool val){
 
   if(rule == Monotonicity)          dependences[relNo].mono = val;
@@ -435,8 +396,6 @@ void setDependencesVal(std::vector<depRel> &dependences, int relNo, int rule, bo
   else if(rule == Triangularity)    dependences[relNo].tri = val;
   else if(rule == FuncConsistency)  dependences[relNo].combo = val;
 }
-
-
 
 string getPrettyComplexity(string comp){
   string pComp;
@@ -475,43 +434,24 @@ void initComplexities(map<string,int> &complexities){
 
 int compCompare(string comp1, string comp2){
 map<string,int> complexities;
-complexities[string("O(0)")] = 0;
-complexities[string("O(1)")] = 1;
-complexities[string("O(n^1)")] = 2;
-complexities[string("O(nnz^1)")] = 3;
-complexities[string("O(nnz^2/n^1)")] = 4;
-complexities[string("O(nnz^4/n^3)")] = 5;
-complexities[string("O(nnz^5/n^4)")] = 6;
-complexities[string("O(n^2)")] = 7;
-complexities[string("O(n^1*nnz^1)")] = 8;
-complexities[string("O(nnz^2)")] = 9;
-complexities[string("O(nnz^3/n^1)")] = 10;
-complexities[string("O(nnz^5/n^3)")] = 11;
+  complexities[string("O(0)")] = 0;
+  complexities[string("O(1)")] = 1;
+  complexities[string("O(n^1)")] = 2;
+  complexities[string("O(nnz^1)")] = 3;
+  complexities[string("O(nnz^2/n^1)")] = 4;
+  complexities[string("O(nnz^4/n^3)")] = 5;
+  complexities[string("O(nnz^5/n^4)")] = 6;
+  complexities[string("O(n^2)")] = 7;
+  complexities[string("O(n^1*nnz^1)")] = 8;
+  complexities[string("O(nnz^2)")] = 9;
+  complexities[string("O(nnz^3/n^1)")] = 10;
+  complexities[string("O(nnz^5/n^3)")] = 11;
   if( complexities[comp1] < complexities[comp2] )       return -1;
   else if( complexities[comp1] == complexities[comp2] ) return 0;
   else if( complexities[comp1] > complexities[comp2] )  return 1;
 
   return -1;
 }
-
-/*
-  outFig9<<"Index Array Property, O(n^1) , O(nnz^1) , O(nnz^2/n^1) , O(nnz^4/n^3)"
-           " , O(nnz^5/n^4), O(n^2) , O(n^1*nnz^1) , O(nnz^2) , O(nnz^3/n^1) , O(nnz^5/n^3)\n";
-  printCompString(string("Baseline"),blComplexities , outFig9);
-  printCompString(string("Monotonicity"),monoComplexities , outFig9);
-  printCompString(string("Correlated Monotonicity"),coMonoComplexities , outFig9);
-  printCompString(string("Triangular Matrix"),triComplexities , outFig9);
-  printCompString(string("Combination"),comboComplexities , outFig9);
-*/
-
-void printCompString(string category, map<string,int> &complexities, ofstream &out){
-  out<<category<<" , "<<complexities[string("O(n^1)")]<<" , "<<complexities[string("O(nnz^1)")]
-     <<" , "<<complexities[string("O(nnz^2/n^1)")]<<" , "<<complexities[string("O(nnz^4/n^3)")]
-     <<" , "<<complexities[string("O(nnz^5/n^4)")]<<" , "<<complexities[string("O(n^2)")]<<" , "
-     << complexities[string("O(n^1*nnz^1)")]<<" , "<<complexities[string("O(nnz^2)")]<<" , "
-     <<complexities[string("O(nnz^3/n^1)")]<<" , "<<complexities[string("O(nnz^5/n^3)")]<<"\n";
-}
-
 
 void restComplexities(map<string,int> &complexities){
   for (map<string,int>::iterator it = complexities.begin(); it!=complexities.end(); it++)
@@ -524,93 +464,8 @@ void printComplexities(map<string,int> &complexities, string stage, ofstream &ou
     out<<"  "<<it->second<<"  ";
 }
 
-
 string trimO(string str){
   return str.erase(0,1);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-void EXPECT_EQ(Relation *result, Relation *expected){
-
-    if( result == NULL && expected == NULL ){
-        cout<<"\n\nResult MATCH Expected: Not Satisfiable.\n\n";
-    }
-
-    else if( result != NULL && expected == NULL ){
-        cout<<"\n\nResult DOES NOT MATCH Expected:\n"
-              "Expected: Not Satisfiable\nResult:\n"<<result->toISLString()<<"\n\n";
-    }
-
-    else if( result == NULL && expected != NULL ){
-        cout<<"\n\nResult DOES NOT MATCH Expected:\n"
-              "Expected:\n"<<expected->toISLString()<<"\nResult: Not Satisfiable\n\n";
-    }
-
-
-    else if( result != NULL && expected != NULL ){
-      // Replace uf calls with the variables to create an affine superset.
-      Relation * supAffRes = result->superAffineRelation();
-      Relation * supAffExp = expected->superAffineRelation();
-
-      isl_ctx* ctx = isl_ctx_alloc();
-      isl_map* resISL =  isl_map_read_from_str(ctx, (supAffRes->toISLString().c_str()));
-      isl_map* expISL =  isl_map_read_from_str(ctx, (supAffExp->toISLString().c_str()));
-
-      //if( result->toISLString() == expected->toISLString() ){
-      if( isl_map_plain_is_equal( resISL , expISL ) ){
-        cout<<"\n\nResult MATCH Expected: Which is:\n"<<result->toISLString()<<"\n\n";
-      }
-      else {
-        cout<<"\n\nResult DOES NOT MATCH Expected:\n"
-            "Expected:\n"<<expected->toISLString()<<
-             "\nResult:\n"<<result->toISLString()<<"\n\n";
-      }
-    }
-
-}
-
-
-
-void EXPECT_EQ(string a, string b){
-
-    if( a != b ){
-
-        cout<<"\n\nExpected: "<<a;
-        cout<<"\n\nActual:"<< b <<"\n\n";
-    }
-}
-
-bool printRelation(string msg, Relation *rel){
-
-    if ( rel ) {
-
-        cout<<"\n\n"<<msg<<rel->toISLString()<<"\n\n";
-    } else {
-
-        cout<<"\n"<<msg<<"Not Satisfiable"<<"\n";
-    }
-
-    return true;
-}
-
-int str2int(string str){
-  int i;
-  sscanf (str.c_str(),"%d",&i);
-  return i;
 }
 
 string int2str(int i){
