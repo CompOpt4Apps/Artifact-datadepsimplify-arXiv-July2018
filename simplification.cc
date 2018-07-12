@@ -65,6 +65,7 @@ void printComplexities(map<string,int> &complexities, string stage, ofstream &ou
 string adMissingInductionConstraints(string str,json &missingConstraints);
 void setDependencesVal(std::vector<depRel> &dependences, int relNo, int rule, bool val);
 string getPrettyComplexity(string comp);
+string giveCompWithOrd(int ord);
 int compCompare(string comp1, string comp2);
 string int2str(int i);
 string trimO(string str);
@@ -308,23 +309,31 @@ void driver(string list)
   outTab4.close();
 
 
+  cout<<"\n\nPartial Table 3 is written to results/partialTable3.csv\n"
+        "Partial Table 4 is written to results/partialTable4.csv\n\n"
+        "The superset results must be reproduced by hand by looking at "
+        "individual detailed result output for each kernel, "
+        "e.g results/staticleftChol_csc.out, and following instructions "
+        "in section 5 of the paper\n\n";
+
   // Generate figure 9
   ofstream outFig9("results/figure9.csv", std::ofstream::out);
   outFig9<<"Complexity Classes, Baseline , Monotonicity , Correlated Monotonicity ,"
            " Triangular Matrix , Combination";
-  for (map<string,int>::iterator it=blComplexities.begin(); 
-       it!=blComplexities.end(); it++){
-    if( it->second  == 0) continue;
-    outFig9<<"\n"<<getPrettyComplexity(it->first)<< ", " <<it->second<<" , "
-           <<monoComplexities[it->first]<<" , "<<coMonoComplexities[it->first]
-           <<" , "<<triComplexities[it->first]<<" , "<<comboComplexities[it->first];
+  for(int i=0; i < blComplexities.size(); i++){
+    string comp = giveCompWithOrd(i);
+    if( blComplexities[comp] == 0) continue;
+    outFig9<<"\n"<<getPrettyComplexity(comp)<< ", " <<blComplexities[comp]<<" , "
+           <<monoComplexities[comp]<<" , "<<coMonoComplexities[comp]
+           <<" , "<<triComplexities[comp]<<" , "<<comboComplexities[comp];
   }
   outFig9.close();
 
   int gnErr = system ("gnuplot data/gnpFig9.gnu");
-  gnErr = system ("evince results/figure9.pdf");
+//  gnErr = system ("evince results/figure9.pdf");
 }
 // ----------- End of driver function --------------------------------------
+
 
 // Generate CHILL scripts using analysis info from json file 
 void genChillScript(json &analysisInfo){
@@ -410,14 +419,16 @@ string getPrettyComplexity(string comp){
   else if(comp == "O(n^2)")       pComp = "O(n^2)";
   else if(comp == "O(n^1*nnz^1)") pComp = "O(n*nnz)";
   else if(comp == "O(nnz^2)")     pComp = "O(nnz^2)";
-  else if(comp == "O(nnz^2)")     pComp = "O(nnz^2)";
   else if(comp == "O(nnz^3/n^1)") pComp = "O((nnz^2)*(nnz/n))";
+  else if(comp == "O(nnz^4/n^2)") pComp = "O((nnz^2)*(nnz/n)^2)";
   else if(comp == "O(nnz^5/n^3)") pComp = "O((nnz^2)*(nnz/n)^3)";
   else                            pComp = "NaN";
   return pComp;
 }
 
 void initComplexities(map<string,int> &complexities){
+  complexities[string("O(0)")] = 0;
+  complexities[string("O(1)")] = 0;
   complexities[string("O(n^1)")] = 0;
   complexities[string("O(nnz^1)")] = 0;
   complexities[string("O(nnz^2/n^1)")] = 0;
@@ -428,29 +439,52 @@ void initComplexities(map<string,int> &complexities){
   complexities[string("O(n^1*nnz^1)")] = 0;
   complexities[string("O(nnz^2)")] = 0;
   complexities[string("O(nnz^3/n^1)")] = 0;
+  complexities[string("O(nnz^2/n^2)")] = 0;
   complexities[string("O(nnz^5/n^3)")] = 0;
 }
 
 
 int compCompare(string comp1, string comp2){
-map<string,int> complexities;
+  map<string,int> complexities;
   complexities[string("O(0)")] = 0;
   complexities[string("O(1)")] = 1;
   complexities[string("O(n^1)")] = 2;
   complexities[string("O(nnz^1)")] = 3;
   complexities[string("O(nnz^2/n^1)")] = 4;
-  complexities[string("O(nnz^4/n^3)")] = 5;
-  complexities[string("O(nnz^5/n^4)")] = 6;
-  complexities[string("O(n^2)")] = 7;
-  complexities[string("O(n^1*nnz^1)")] = 8;
-  complexities[string("O(nnz^2)")] = 9;
-  complexities[string("O(nnz^3/n^1)")] = 10;
-  complexities[string("O(nnz^5/n^3)")] = 11;
+  complexities[string("O(nnz^3/n^2)")] = 5;
+  complexities[string("O(nnz^4/n^3)")] = 6;
+  complexities[string("O(nnz^5/n^4)")] = 7;
+  complexities[string("O(n^2)")] = 8;
+  complexities[string("O(n^1*nnz^1)")] = 9;
+  complexities[string("O(nnz^2)")] = 10;
+  complexities[string("O(nnz^3/n^1)")] = 11;
+  complexities[string("O(nnz^4/n^2)")] = 12;
+  complexities[string("O(nnz^5/n^3)")] = 13;
   if( complexities[comp1] < complexities[comp2] )       return -1;
   else if( complexities[comp1] == complexities[comp2] ) return 0;
   else if( complexities[comp1] > complexities[comp2] )  return 1;
 
   return -1;
+}
+
+string giveCompWithOrd(int ord){
+  string comp="";
+  if(ord == 0) comp = "O(0)";
+  else if(ord == 1) comp = "O(1)";
+  else if(ord == 2) comp = "O(n^1)";
+  else if(ord == 3) comp = "O(nnz^1)";
+  else if(ord == 4) comp = "O(nnz^2/n^1)";
+  else if(ord == 5) comp = "O(nnz^3/n^2)";
+  else if(ord == 6) comp = "O(nnz^4/n^3)";
+  else if(ord == 7) comp = "O(nnz^5/n^4)";
+  else if(ord == 8) comp = "O(n^2)";
+  else if(ord == 9) comp = "O(n^1*nnz^1)";
+  else if(ord == 10) comp = "O(nnz^2)";
+  else if(ord == 11) comp = "O(nnz^3/n^1)";
+  else if(ord == 12) comp = "O(nnz^4/n^2)";
+  else if(ord == 13) comp = "O(nnz^5/n^3)";
+  else              comp = "NaN";
+  return comp;  
 }
 
 void restComplexities(map<string,int> &complexities){
