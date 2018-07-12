@@ -1,4 +1,4 @@
-This the artifact that uses CHiLL for data dependence analysis, IEGenLib for simplification, and produces results for paper submitted to arXiv in July 2018.
+This is the artifact that uses CHiLL for data dependence analysis, IEGenLib for simplification, and produces results for paper submitted to arXiv in July 2018.
 
 After building the driver and its dependencies run following:
 
