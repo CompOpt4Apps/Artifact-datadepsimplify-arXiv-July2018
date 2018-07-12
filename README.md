@@ -1,12 +1,12 @@
-Artifact that uses CHiLL for data dependence analysis, IEGenLib for simplification, and produces results for paper submitted to arXiv in July 2018.
+This the artifact that uses CHiLL for data dependence analysis, IEGenLib for simplification, and produces results for paper submitted to arXiv in July 2018.
 
 After building the driver and its dependencies run following:
 
 ./simplifyDriver list.txt
 
-list.txt includes names of JSON files. 
-Each JSON file contains address of input kernel plus index array properties 
-and analysis information like which loops we want to analize. 
+The list.txt can include names of some JSON files. 
+Each JSON file contains address of an input kernel that we want to extract its dependences and analyze them for partial parallelisim.
+They also contain index array properties and analysis information like which loops we want to analyze. 
 
 
 # How to builld the artifact:
@@ -37,8 +37,7 @@ one in terms of building effort.
 
 These softwares are prerequisits for installing all the subsequent components:
 
-sudo apt-get install git wget tar unzip make autoconf automake cmake libtool default-jdk default-jre flex bison python-dev texinfo gnuplot-x11
-
+`sudo apt-get install git wget tar unzip make autoconf automake cmake libtool default-jdk default-jre flex bison python-dev texinfo gnuplot-x11 evince`
 
 
 ## Step 1: Installing boost:
