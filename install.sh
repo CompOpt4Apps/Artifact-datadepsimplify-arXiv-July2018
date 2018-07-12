@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-sudo apt-get install git wget tar unzip make autoconf automake cmake libtool default-jdk default-jre flex bison python-dev texinfo gnuplot-x11
+
+sudo apt-get install git wget tar unzip make autoconf automake cmake libtool default-jdk default-jre flex bison python-dev texinfo gnuplot-x11 evince
 
 mkdir boost
 export BOOSTHOME=$(pwd)/boost

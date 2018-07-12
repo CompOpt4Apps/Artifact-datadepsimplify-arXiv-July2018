@@ -308,10 +308,12 @@ void driver(string list)
   outTab3.close();
   outTab4.close();
 
+  cout<<"\n\nFigure 9 data are written to results/figure9.csv, and "
+        "a pdf version is generated which can be found at results/figure9.pdf\n\n";
 
   cout<<"\n\nPartial Table 3 is written to results/partialTable3.csv\n"
         "Partial Table 4 is written to results/partialTable4.csv\n\n"
-        "The superset results must be reproduced by hand by looking at "
+        "The superset results can be reproduced by hand looking at "
         "individual detailed result output for each kernel, "
         "e.g results/staticleftChol_csc.out, and following instructions "
         "in section 5 of the paper\n\n";

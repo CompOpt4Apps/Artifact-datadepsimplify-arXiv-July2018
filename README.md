@@ -1,6 +1,12 @@
 Artifact that uses CHiLL for data dependence analysis, IEGenLib for simplification, and produces results for paper submitted to arXiv in July 2018.
 
+After building the driver and its dependencies run following:
 
+./simplifyDriver list.txt
+
+list.txt includes names of JSON files. 
+Each JSON file contains address of input kernel plus index array properties 
+and analysis information like which loops we want to analize. 
 
 
 How to builld the artifact:

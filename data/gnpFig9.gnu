@@ -1,9 +1,11 @@
 set terminal pdf
 set output "results/figure9.pdf"
-set title "Figure 9"
+#set title "Figure 9"
 set datafile separator ","
 set boxwidth 0.9 relative
-set yrange [1:20]
+set ylabel "Number of Relations in each Complexity"
+set yrange [0:20]
+set xtics rotate #by 45 offset -0.8,-1.8
 set style data histograms
 set style histogram cluster
 set style fill solid 1.0 border lt -1
