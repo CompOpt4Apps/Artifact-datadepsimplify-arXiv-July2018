@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+#
 sudo apt-get install git wget tar unzip make autoconf automake cmake libtool default-jdk default-jre flex bison python-dev texinfo gnuplot-x11 evince
 
+#
 mkdir boost
 export BOOSTHOME=$(pwd)/boost
 wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz

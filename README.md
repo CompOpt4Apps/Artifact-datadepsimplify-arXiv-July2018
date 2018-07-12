@@ -14,10 +14,73 @@ dependences and analyze them for partial parallelisim.  The JSON files also cont
 array properties and analysis information like which loops we want to analyze.
 
 # Specifying index array properties
+The index array properties are specidfied inside JSON files for each kernel. 
+The properties are specified in two general ways:
+1. Number of well known mathmatical properties about a function are defined for a single
+index array. For instance if you look at data/ic0_csc.json file which is the input JSON file for 
+Incomplete Cholesky code (data/ic0_csc.c), you can see the following:
+```
+        { 
+           "Name" : "colPtr",
+           "Domain" : "{[j]:0<=j &&j<n}",
+           "Range" : "{[i]:0<=i &&i<nnz}",
+           "Bijective" : "false",
+           "Monotonicity" : "Monotonic_Increasing"
+        }
+```
+Here four properties for colPtr index array: (1) Domain, which would be the range of 
+the numbers that can be used to index colPtr itself. 
+(2) Range, which is the range values stored in coPtr. 
+(3) Whether the unineterpreted function (UF) representing colPtr can be considered bijective.
+(4) Whether UF can be considered monotonic and in what manner.
 
-[FIXME: Show some examples of property specification in JSON files and
- list IEGenLib functions that enable specifying these.]
- 
+2. Index array properties that might have arbitrary form, declare a relationship between two or more 
+index arrays, etc, can be defined as universially quantifed assertions.
+For instance if you look back at data/ic0_csc.json file again, you can see the following:
+```
+      "User Defined" :
+      [
+        {
+          "Type" : "Triangularity",
+          "UniQuantVar" : "[e1,e2]",
+          "Rule (comment)" : "Forall e1,e2, colPtr(e1) < e2 => e1 < rowIdx(e2)",
+          "p" : "colPtr(e1) < e2",
+          "q" : "e1 < rowIdx(e2)"
+        }
+      ]
+```
+This assertion defines the Triangularity properties that can be expressed 
+with a relationship between colPtr and rowIdx index arrays. 
+In this syntax, we are trying to define
+`Forall e1,e2,  e1 < colPtr(e2) => rowIdx(e1) < e2` assertion. In the components, 
+`UniQuantVar` field defines the `Forall e1,e2` part; 
+`p` defines the left hand side of the inference, e.g the `colPtr(e1) < e2` part;
+`q` defines the left hand side of the inference, e.g the `e1 < rowIdx(e2)` part.
+
+Right now, we are using the name of the property for our evaluation purposes. 
+Nonetheles, users can specify any arbitrary assertion by giving it one of the already defined
+names like Triangularity or CoMonotonicity. This way the assertion would gets 
+considered when we are checking for unsatisfiability or simplifying the dependences, 
+however,  for the purpose of gathering results, the arbitrary properties
+results gets counted with other results for the propery, which name was given while defining it.  
+
+Index array properties defined in the JSON files get stored in the IEGenLib library's
+environment as universially quantified assertions. Then, whenever they are needed 
+for instance for detecting unsatisfiable relations, they get instantiated as 
+described in section 3.4 of the arXiv submission, and get used. 
+In IEGenLib, the universially quantified assertions are stored as objects of
+UniQuantRule class that is defined inside IEGenLib/src/set_relation/environment.h.
+This class stores the assertions as two iegenlib::Set object, one for left hand side,
+and one for right hand side, which makes defining arbitrary assertions easy since
+iegenlib::Set's can represent any set of equalitiy and inequality constraints
+that can also include uninterpreted function symbols with arbitrary parameters.
+ can be defined and added to the environment with following syntax:
+```
+  UniQuantRule *uqRule;
+  uqRule = new UniQuantRule("Type", "UniQuantVar", "p", "q");
+  currentEnv.addUniQuantRule( uqRule );
+```
+The addUniQuantRule( uqRule ); call, adds the assertion to the environment.
 
 
 # How to build the artifact:
