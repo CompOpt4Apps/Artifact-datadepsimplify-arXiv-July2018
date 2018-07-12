@@ -1,0 +1,52 @@
+stages:
+    - build
+    - test
+
+build-cmake:
+    stage: build
+    script:
+        - mkdir build
+        - cd build
+        - cmake ..
+        - make $CMAKEBUILD
+    only:
+        - master
+        - /^cmake-.*$/
+    artifacts:
+        paths:
+            - build/
+        expire_in: 1 week
+
+build-automake:
+    stage: build
+    script:
+        - ./bootstrap
+        - ./configure --disable-debug
+        - make
+    only:
+        - master
+    artifacts:
+        untracked: true
+        expire_in: 1 week
+
+test-cmake:
+    stage: test
+    dependencies:
+        - build-cmake
+    script:
+        - cd build
+        - make check-all
+    only:
+        - master
+        - /^cmake-.*$/
+
+test-automake:
+    stage: test
+    dependencies:
+        - build-automake
+    script:
+        - make
+        - make check
+    only:
+        - master
+
