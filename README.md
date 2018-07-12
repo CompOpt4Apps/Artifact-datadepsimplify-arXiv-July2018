@@ -16,10 +16,10 @@ We have developed our artifact on a platform with following software:
 + OS:  Ubuntu 16.04
 + GCC: gcc 5.4.0 (Default on the OS)
 
-We have prepared an installation bash script that we have successfully on the above platform.
-The installation script, install.sh, can be found in the same directory as this README. 
+**We have prepared an installation bash script that we have successfully on the above platform.
+The installation script, install.sh, can be found in the same directory as this README.
 The script can build all the dependencies and the driver for the arrifact. 
-Please note that the installation script must be executed with sudo access:
+Please note that the installation script must be executed with sudo access:**
 
 `sudo ./install.sh`
 
