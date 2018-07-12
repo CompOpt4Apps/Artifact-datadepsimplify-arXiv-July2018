@@ -28,10 +28,12 @@ Incomplete Cholesky code (data/ic0_csc.c), you can see the following:
            "Monotonicity" : "Monotonic_Increasing"
         }
 ```
-Here four properties for colPtr index array: (1) Domain, which would be the range of 
+Here we define four properties for colPtr index array: 
+(1) Domain, which would be the range of 
 the numbers that can be used to index colPtr itself. 
 (2) Range, which is the range values stored in coPtr. 
-(3) Whether the unineterpreted function (UF) representing colPtr can be considered bijective.
+(3) Whether the unineterpreted function (UF) representing colPtr 
+can be considered bijective.
 (4) Whether UF can be considered monotonic and in what manner.
 
 2. Index array properties that might have arbitrary form, declare a relationship between two or more 
@@ -58,18 +60,19 @@ In this syntax, we are trying to define
 `q` defines the left hand side of the inference, e.g the `e1 < rowIdx(e2)` part.
 
 Right now, we are using the name of the property for our evaluation purposes. 
-Nonetheles, users can specify any arbitrary assertion by giving it one of the already defined
-names like Triangularity or CoMonotonicity. This way the assertion would gets 
-considered when we are checking for unsatisfiability or simplifying the dependences, 
-however,  for the purpose of gathering results, the arbitrary properties
-results gets counted with other results for the propery, which name was given while defining it.  
+Nonetheles, users can specify any arbitrary assertion by giving it one of 
+the already defined names like Triangularity or CoMonotonicity. 
+This way the assertion would be considered when we are checking for 
+unsatisfiability or simplifying the dependences. However,  for the purpose of 
+gathering results, the arbitrary property's results gets counted with 
+other results for the propery which name was given while defining it. 
 
 Index array properties defined in the JSON files get stored in the IEGenLib library's
 environment as universially quantified assertions. Then, whenever they are needed 
 for instance for detecting unsatisfiable relations, they get instantiated as 
 described in section 3.4 of the arXiv submission, and get used. 
-In IEGenLib, the universially quantified assertions are stored as objects of
-UniQuantRule class that is defined inside IEGenLib/src/set_relation/environment.h.
+**In IEGenLib, the universially quantified assertions are stored as objects of
+UniQuantRule class** that is defined inside IEGenLib/src/set_relation/environment.h.
 This class stores the assertions as two iegenlib::Set object, one for left hand side,
 and one for right hand side, which makes defining arbitrary assertions easy since
 iegenlib::Set's can represent any set of equalitiy and inequality constraints
@@ -80,7 +83,7 @@ that can also include uninterpreted function symbols with arbitrary parameters.
   uqRule = new UniQuantRule("Type", "UniQuantVar", "p", "q");
   currentEnv.addUniQuantRule( uqRule );
 ```
-The addUniQuantRule( uqRule ); call, adds the assertion to the environment.
+**The addUniQuantRule( uqRule ); call, adds the assertion to the environment.**
 
 
 # How to build the artifact:
