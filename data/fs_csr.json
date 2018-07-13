@@ -2,14 +2,6 @@
   [
     {
       "Name" : "Forward solve CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "1",
-      "Relation" : "{ [i,j] -> [ip,jp] : i = ip and i < ip and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(i) <= j and j < rowPtr(i+1) and rowPtr(ip) <= jp and jp < rowPtr(ip+1) }",
-
-      "Efficient Inspector complexity:" : "0",
-      "Efficient Inspector complexity after adding domain info:" : "0",
-      "Expected" : "Not Satisfiable",
-      "What helps to detect unsat 1:" : "Linear inconsistency",
 
       "CHILL analysis info" : 
       [
@@ -63,67 +55,7 @@
       "Do Not Project Out" :
       [
         "In_2", "Out_2"
-      ],
-      "Remove Constraints" : "0",
-      "Comment: Code" : [
-                  "Following is the Forward solve for CSR.",
-                  "for(i=0;i<n;i++) {",
-                  "    tmp = b[i];",
-                  "    for (j=rowPtr[i]; j<rowPtr[i+1]-1;j++) {",
-                  "S1:     tmp -= lowerTriSpMatrix[j]*x[colIdx[j]];",
-                  "    }",
-                  "S2: x[i] = tmp / lowerTriSpMatrix[rowPtr[i+1]-1];",
-                  "}"
-                  ],
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "write/write x[i] in S2:"
-                  ]
-    },
-    {
-      "Name" : "Forward solve for CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "2",
-      "Relation" : "{ [i,j] -> [ip,jp] : i = ip and ip < i and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(i) <= j and j < rowPtr(i+1) and rowPtr(ip) <= jp and jp < rowPtr(ip+1) }",
-
-      "Efficient Inspector complexity:" : "0",
-      "Efficient Inspector complexity after adding domain info:" : "0",
-      "Expected" : "Not Satisfiable",
-      "What helps to detect unsat 1:" : "Linear inconsistency",
-
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "write/write x[i] in S2:"
-                  ]
-    },
-    {
-      "Name" : "Forward solve for CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "3",
-      "Relation" : "{ [i] -> [ip,jp] : i = colIdx(jp) and i < ip and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(ip) <= jp and jp < rowPtr(ip+1) }",
-
-      "Efficient Inspector complexity:" : "O( nnz )",
-      "Efficient Inspector complexity after adding domain info:" : "stays O( nnz ) )",
-      "Expected" : "{ [i] -> [ip,jp] : i = colIdx(jp) and i < ip and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(ip) <= jp and jp < rowPtr(ip+1) }",
-
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "read/write x[colIdx[j] and x[i] in S1, and S2"
-                  ]
-    },
-    {
-      "Name" : "Forward solve for CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "4",
-      "Relation" : "{ [i] -> [ip,jp] : i = colIdx(jp) and ip < i and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(ip) <= jp and jp < rowPtr(ip+1) }",
-      "Efficient Inspector complexity after adding domain info:" : "0",
-      "Expected" : "Not Satisfiable",
-      "What helps to detect unsat 1:" : "Lower Triangular",
-
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "read/write x[colIdx[j] and x[i] in S1, and S2"
-                  ]
+      ]
     }
   ]
 ]

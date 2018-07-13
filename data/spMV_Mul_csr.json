@@ -2,15 +2,6 @@
   [
     {
       "Name" : "Sparse MV Mul. CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "1",
-      "Relation" : "{ [i,k] -> [ip,kp] : i = ip and i < ip and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(i) <= k and k < rowPtr(i+1) and rowPtr(ip) <= kp and kp < rowPtr(ip+1) }",
-
-      "Efficient Inspector complexity:" : "0",
-      "Efficient Inspector complexity after adding domain info:" : "0",
-      "Expected" : "Not Satisfiable",
-      "What helps to detect unsat 1:" : "Linear inconsistency",
-
       "CHILL analysis info" : 
       [
         {
@@ -63,36 +54,7 @@
       "Do Not Project Out" :
       [
         "In_2", "Out_2"
-      ],
-      "Remove Constraints" : "0",
-      "Comment: Code" : [
-                  "Following is the Forward solve for CSR.",
-                  "for (i=0; i<n; i++) {",
-                  "  for(k=rowptr[i]; k<rowptr[i+1]; k++){",
-                  "S1: y[i] = y[i] + spMatrix[k]*x[col[k]];",
-                  "  }",
-                  "}"
-                  ],
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "write/read y[i] in S1:"
-                  ]
-    },
-    {
-      "Name" : "Forward solve for CSR",
-      "Input Type" : "IEgenLIB Relation",
-      "Index" : "2",
-      "Relation" : "{ [i,k] -> [ip,kp] : i = ip and i < ip and 0 <= i and i < n and 0 <= ip and ip < n and rowPtr(i) <= k and k < rowPtr(i+1) and rowPtr(ip) <= kp and kp < rowPtr(ip+1) }",
-
-      "Efficient Inspector complexity:" : "0",
-      "Efficient Inspector complexity after adding domain info:" : "0",
-      "Expected" : "Not Satisfiable",
-      "What helps to detect unsat 1:" : "Linear inconsistency",
-
-      "Comment: Source of data access in the code for this relation" : [
-                    " ",
-                    "write/read y[i] in S1:"
-                  ]
+      ]
     }
   ]
 ]
