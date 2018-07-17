@@ -21,6 +21,7 @@ g++ -O3 -o simplifyDriver simplification.cc -I IEGenLib/src IEGenLib/build/src/l
 
 ./simplifyDriver data/SOME_EXAMPLE/SOME_EXAMPLE.json
 
+(c) University of Arizona, 2018
 */
 
 #include <iostream>
