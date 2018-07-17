@@ -14,9 +14,9 @@ dependences and analyze them for partial parallelisim.  The JSON files also cont
 array properties and analysis information like which loops we want to analyze.
 
 # Specifying index array properties
-The index array properties are specidfied inside JSON files for each kernel. 
-The properties are specified in two general ways:
-1. Number of well known mathmatical properties about a function are defined for a single
+The index array properties are specified inside JSON files for each kernel. 
+The properties are specified in two ways:
+1. Some mathmatical properties about a function are defined for each
 index array. For instance if you look at data/ic0_csc.json file which is the input JSON file for 
 Incomplete Cholesky code (data/ic0_csc.c), you can see the following:
 ```
@@ -36,7 +36,7 @@ the numbers that can be used to index colPtr itself.
 can be considered bijective.
 (4) Whether UF can be considered monotonic and in what manner.
 
-2. Index array properties that might have arbitrary form, declare a relationship between two or more 
+2. More general index array properties such as a relationship between two or more 
 index arrays, etc, can be defined as universially quantifed assertions.
 For instance if you look back at data/ic0_csc.json file again, you can see the following:
 ```
@@ -60,7 +60,7 @@ In this syntax, we are trying to define
 `q` defines the left hand side of the inference, e.g the `e1 < rowIdx(e2)` part.
 
 Right now, we are using the name of the property for our evaluation purposes. 
-Nonetheles, users can specify any arbitrary assertion by giving it one of 
+Nonetheles, users can specify other assertions by giving it one of 
 the already defined names like Triangularity or CoMonotonicity. 
 This way the assertion would be considered when we are checking for 
 unsatisfiability or simplifying the dependences. However,  for the purpose of 
@@ -69,21 +69,22 @@ other results for the propery which name was given while defining it.
 
 Index array properties defined in the JSON files get stored in the IEGenLib library's
 environment as universially quantified assertions. Then, whenever they are needed 
-for instance for detecting unsatisfiable relations, they get instantiated as 
-described in section 3.4 of the arXiv submission, and get used. 
+for instance for detecting unsatisfiable relations, they are instantiated as 
+described in Section 3.4 of the arXiv submission. 
+
 **In IEGenLib, the universially quantified assertions are stored as objects of
 UniQuantRule class** that is defined inside IEGenLib/src/set_relation/environment.h.
 This class stores the assertions as two iegenlib::Set object, one for left hand side,
-and one for right hand side, which makes defining arbitrary assertions easy since
+and one for right hand side, which makes defining assertions easy since
 iegenlib::Set's can represent any set of equalitiy and inequality constraints
-that can also include uninterpreted function symbols with arbitrary parameters.
- can be defined and added to the environment with following syntax:
+that include uninterpreted function symbols with arbitrary parameters.
+Assertions can be defined and added to the environment with following syntax:
 ```
   UniQuantRule *uqRule;
-  uqRule = new UniQuantRule("Type", "UniQuantVar", "p", "q");
+  uqRule = new UniQuantRule("Triangularity", "[e1,e2]", "colPtr(e1) < e2", "e1 < rowIdx(e2)");
   currentEnv.addUniQuantRule( uqRule );
 ```
-**The addUniQuantRule( uqRule ); call, adds the assertion to the environment.**
+**The addUniQuantRule( uqRule ) call adds the assertion to the environment.**
 
 
 # How to build the artifact:
