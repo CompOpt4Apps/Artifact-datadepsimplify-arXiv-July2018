@@ -1,27 +1,27 @@
 /*!
  * \file simplification.cc
  *
- * This file is a driver for using detectUnsatOrFindEqualities 
- * and pertaining functions in IEgenLib.
- * This function can be used to detect whither a Set/Relation
- * is UnSat or MaySat. And, in case of MaySat ones, it would return 
- * new useful equalities (adhered to original constraints).
+ * \author Mahdi Soltan Mohammadi 
+ *
+ * Copyright (c) 2018, University of Arizona <br>
+ * All rights reserved. <br>
+ * See ./LICENSE for details. <br>
+ *
+ * This file is a driver for reproducing the result for the paper titled:
+   "Sparse Matrix Code Dependence Analysis Simplification at Compile Time"
+   that has been submitted to arXiv.
  *
 
->> Build IEGenLib (run in the root directory):
+ ** For building the dependencies see README.md
 
-./configure
-make
-
->> Build the driver (in root directory run):
+>> After build all the dependenciues you can build the driver (in root directory run):
 
 g++ -O3 -o simplifyDriver simplification.cc -I IEGenLib/src IEGenLib/build/src/libiegenlib.a -lisl -std=c++11
 
 >> Run the driver (in root directory):
 
-./simplifyDriver data/SOME_EXAMPLE/SOME_EXAMPLE.json
+./simplifyDriver list.txt
 
-(c) University of Arizona, 2018
 */
 
 #include <iostream>

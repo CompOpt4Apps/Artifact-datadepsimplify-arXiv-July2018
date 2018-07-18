@@ -94,11 +94,10 @@ We have tested the artifact build and execution on the following platform:
 + OS:  Ubuntu 16.04
 + GCC: gcc 5.4.0 (Default on the OS)
 
-**There is an installation bash script that downloads the necessary versions of
-the Rose compiler and boost library.  The installation script, install.sh, is 
-in the same directory as this README.  The script can build all the dependencies 
-and the driver for the artifact. Please note that the installation script must 
-be executed with sudo access:**
+** There is a installation script, install.sh, is in the same directory as this README
+that can build all the dependencies and the driver for the artifact including 
+Rose compiler and boost library. Nonetheless, it is only tested in the above platform.
+Please note that the installation script must be executed with sudo access:**
 
 ```
     sudo ./install.sh
